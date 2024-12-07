@@ -12,7 +12,7 @@ export const leaveTable = async () => {
       end_date DATE NOT NULL,
       reason TEXT NOT NULL,
       status VARCHAR(15) NOT NULL DEFAULT 'Pending' CHECK (status IN ('Pending', 'Approved', 'Rejected')),
-      type VARCHAR(15) NOT NULL CHECK (type IN ('Casual', 'Sick', 'Annual')),
+      leave_type VARCHAR(15) NOT NULL CHECK (leave_type IN ('Casual', 'Sick', 'Annual')),
       username VARCHAR(100) NOT NULL,
       email VARCHAR(100) UNIQUE NOT NULL
     );

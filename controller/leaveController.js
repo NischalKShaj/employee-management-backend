@@ -12,12 +12,12 @@ export const leaveController = {
       const { startDate, endDate, username, email, reason, leave_type } =
         req.body;
 
-      const existingUser = "SELECT * FROM employee WHERE email = $1";
+      const existingUser = "SELECT * FROM employees WHERE email = $1";
       const exist = await client.query(existingUser, [email]);
 
       const user = exist.rows[0];
       if (!user) {
-        return res.status(400).json({ message: "user not found" });
+        return res.status(404).json({ message: "user not found" });
       }
 
       // for adding the leave to the leave db
@@ -53,7 +53,7 @@ export const leaveController = {
       const email = req.user.email;
 
       const query = `
-            SELECT leave_id, startDate, endDate, reason, status,type
+            SELECT leave_id, startDate, endDate, reason, status,leave_type
             from leaveData
             WHERE email = $1 
             ORDER BY startDate DESC;
@@ -62,7 +62,7 @@ export const leaveController = {
       const result = await client.query(query, [email]);
 
       if (result.rows.length === 0) {
-        return res.status(400).json({ message: "no leaves applied" });
+        return res.status(404).json({ message: "no leaves applied" });
       }
       res.status(200).json({
         message: "Leave requests fetched successfully",

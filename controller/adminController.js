@@ -93,8 +93,9 @@ export const adminController = {
         if (passwordError) {
           return res.status(400).json({ message: passwordError });
         }
+        const hashedPassword = await bcrypt.hash(password, 10);
         updates.push(`password = $${counter}`);
-        values.push(password);
+        values.push(hashedPassword);
         counter++;
       }
 

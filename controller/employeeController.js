@@ -154,7 +154,6 @@ export const employeeController = {
       res
         .status(200)
         .json({ message: "password updated successfully", user: updatedUser });
-      client.release();
     } catch (error) {
       throw new Error(error);
     } finally {
@@ -221,8 +220,9 @@ export const employeeController = {
         if (passwordError) {
           return res.status(400).json({ message: passwordError });
         }
+        const hashedPassword = await bcrypt.hash(password, 10);
         updates.push(`password = $${counter}`);
-        values.push(password);
+        values.push(hashedPassword);
         counter++;
       }
 
@@ -262,7 +262,7 @@ export const employeeController = {
       values.push(email);
 
       const updateQuery = `
-      UPDATE employee
+      UPDATE employees
       SET ${updates.join(", ")}
       WHERE email = $${counter}
       RETURNING *;
