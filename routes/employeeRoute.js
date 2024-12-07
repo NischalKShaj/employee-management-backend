@@ -5,6 +5,7 @@ import express from "express";
 import { employeeController } from "../controller/employeeController.js";
 import { authenticateUserJwt } from "../middleware/authenticate.js";
 import { leaveController } from "../controller/leaveController.js";
+import { userBlock } from "../middleware/block.js";
 
 // setting the router
 const router = express.Router();
@@ -19,6 +20,7 @@ router.post("/signup", employeeController.employeeSignup);
 router.patch(
   "/updatePassword",
   authenticateUserJwt,
+  userBlock,
   employeeController.updatePassword
 );
 
@@ -26,16 +28,23 @@ router.patch(
 router.get(
   "/getSelfData",
   authenticateUserJwt,
+  userBlock,
   employeeController.employeeProfile
 );
 
 // router for requesting leave
-router.post("/requestLeave", authenticateUserJwt, leaveController.requestLeave);
+router.post(
+  "/requestLeave",
+  authenticateUserJwt,
+  userBlock,
+  leaveController.requestLeave
+);
 
 // router for viewing the status
 router.get(
   "/viewLeaveStatus",
   authenticateUserJwt,
+  userBlock,
   leaveController.leaveStatus
 );
 
@@ -43,6 +52,7 @@ router.get(
 router.patch(
   "/editEmployeeData",
   authenticateUserJwt,
+  userBlock,
   employeeController.updateEmployee
 );
 

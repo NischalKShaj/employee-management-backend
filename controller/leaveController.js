@@ -50,7 +50,7 @@ export const leaveController = {
   leaveStatus: async (req, res) => {
     const client = await pool.connect();
     try {
-      const email = req.user;
+      const email = req.user.email;
 
       const query = `
             SELECT leave_id, startDate, endDate, reason, status,type
@@ -64,12 +64,10 @@ export const leaveController = {
       if (result.rows.length === 0) {
         return res.status(400).json({ message: "no leaves applied" });
       }
-      res
-        .status(200)
-        .json({
-          message: "Leave requests fetched successfully",
-          leaves: result.rows,
-        });
+      res.status(200).json({
+        message: "Leave requests fetched successfully",
+        leaves: result.rows,
+      });
     } catch (error) {
       throw new Error(error);
     } finally {

@@ -41,7 +41,7 @@ export const employeeController = {
     const client = await pool.connect();
     try {
       const { username, email, password, gender, role, age } = req.body;
-
+      console.log("data", username, email, password, gender, role, age);
       // for name validation
       const nameError = validation.nameValidation(username);
       if (nameError) {
@@ -86,12 +86,14 @@ export const employeeController = {
       }
 
       const query = `
-      INSERT INTO employees(username, email, password, gender, role, age)
-      VALUES ($1,$2,$3,$4,$5,$6)
+      INSERT INTO employees(username, email, password, gender, role, age, is_blocked, is_deleted)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
       RETURNING *;
       `;
 
       const hashPassword = await bcrypt.hash(password, 10);
+      const is_blocked = false;
+      const is_deleted = false;
 
       const result = await client.query(query, [
         username,
@@ -100,6 +102,8 @@ export const employeeController = {
         gender,
         role,
         age,
+        is_blocked,
+        is_deleted,
       ]);
       res.status(201).json({ employee: result.rows[0] });
     } catch (error) {
@@ -162,7 +166,7 @@ export const employeeController = {
   employeeProfile: async (req, res) => {
     const client = await pool.connect();
     try {
-      const email = req.user;
+      const email = req.user.email;
 
       const existingUser = "SELECT * FROM employees WHERE email = $1";
 
@@ -185,7 +189,7 @@ export const employeeController = {
     const client = await pool.connect();
     try {
       const { username, password, age, gender, role } = req.body;
-      const email = req.user;
+      const email = req.user.email;
 
       const existingUser = "SELECT * FROM employees WHERE email = $1";
       const exist = await client.query(existingUser, [email]);

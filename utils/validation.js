@@ -3,7 +3,7 @@
 // for performing the validation for username
 const nameValidation = (username) => {
   // for name
-  const nameRegex = /^[A-Za-z]{3,}$/;
+  const nameRegex = /^[A-Za-z ]{3,}$/;
   if (!nameRegex.test(username)) {
     return "Username must be at least 3 characters and contain only alphabets.";
   }
